@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ovanix AI · Capabilities</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,400..600&family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14120E;
+  --bg-2:#1B1813;
+  --card:#211D16;
+  --card-2:#272218;
+  --cream:#ECE3D2;
+  --cream-2:#D6CCB8;
+  --muted:#8E8472;
+  --muted-2:#6F6757;
+  --line:rgba(236,227,210,0.12);
+  --line-2:rgba(236,227,210,0.06);
+  --accent:#E06B3E;
+  --accent-2:#DDA94F;
+  --sage:#8FAE93;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--cream);
+  font-family:'Hanken Grotesk',sans-serif;
+  font-weight:300;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+::selection{background:var(--accent);color:#14120E}
+
+body::after{
+  content:"";
+  position:fixed;inset:0;z-index:9999;pointer-events:none;
+  opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- chrome ---------- */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:80;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:26px 40px;mix-blend-mode:difference;
+}
+.brand{display:flex;align-items:baseline;gap:11px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.18em;color:#fff;text-transform:uppercase}
+.brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;mix-blend-mode:normal}
+.brand b{font-weight:500}
+.tag-right{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:#fff;text-transform:uppercase;opacity:.7}
+
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0;z-index:90;transition:width .15s linear}
+
+/* ---------- side nav ---------- */
+.nav{position:fixed;right:34px;top:50%;transform:translateY(-50%);z-index:80;display:flex;flex-direction:column;gap:14px}
+.nav button{
+  background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;justify-content:flex-end;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--muted-2);
+  text-transform:uppercase;padding:0;transition:color .3s var(--ease);
+}
+.nav button .bar{width:14px;height:1.5px;background:var(--muted-2);transition:all .35s var(--ease)}
+.nav button .txt{opacity:0;transform:translateX(6px);transition:all .35s var(--ease);white-space:nowrap}
+.nav button:hover{color:var(--cream-2)}
+.nav button:hover .txt{opacity:1;transform:translateX(0)}
+.nav button:hover .bar{background:var(--cream-2)}
+.nav button.active{color:var(--accent)}
+.nav button.active .bar{width:30px;background:var(--accent)}
+.nav button.active .txt{opacity:1;transform:translateX(0);color:var(--accent)}
+
+/* ---------- deck ---------- */
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
+.deck::-webkit-scrollbar{display:none}
+section{
+  min-height:100vh;scroll-snap-align:start;position:relative;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:118px 72px 76px;
+}
+.inner{width:100%;max-width:1180px;margin:0 auto}
+
+/* ---------- type ---------- */
+.kicker{
+  font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);
+}
+
+/* generic big section title (serif) */
+.t{font-family:'Fraunces',serif;font-weight:500;line-height:.96;letter-spacing:-.025em;font-size:clamp(50px,7.2vw,102px)}
+/* project title (sans, deliberately different) */
+.t-proj{font-family:'Hanken Grotesk',sans-serif;font-weight:700;line-height:.94;letter-spacing:-.035em;font-size:clamp(46px,6.4vw,90px);text-transform:none}
+.t-proj .k{color:var(--accent)}
+
+h1{font-family:'Fraunces',serif;font-weight:400;line-height:.96;letter-spacing:-.025em;font-size:clamp(50px,7.6vw,112px)}
+.serif-i{font-style:italic;color:var(--accent-2)}
+p{font-size:clamp(15px,1.15vw,17px);line-height:1.6;color:var(--cream-2);font-weight:300}
+.lead{font-size:clamp(18px,1.5vw,22px);line-height:1.5;color:var(--cream)}
+
+/* ---------- reveal ---------- */
+.r{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--d,0)*90ms)}
+section.in .r{opacity:1;transform:none}
+
+/* ===================== COVER ===================== */
+#s0{justify-content:flex-end;overflow:hidden}
+.glow{position:absolute;inset:0;z-index:0;pointer-events:none}
+.glow::before{content:"";position:absolute;width:60vw;height:60vw;left:-12vw;top:-14vw;border-radius:50%;
+  background:radial-gradient(circle,rgba(224,107,62,.22),transparent 62%);filter:blur(30px);animation:drift 22s ease-in-out infinite alternate}
+.glow::after{content:"";position:absolute;width:46vw;height:46vw;right:-8vw;bottom:-16vw;border-radius:50%;
+  background:radial-gradient(circle,rgba(221,169,79,.13),transparent 64%);filter:blur(34px);animation:drift2 26s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(8vw,6vw) scale(1.12)}}
+@keyframes drift2{to{transform:translate(-6vw,-5vw) scale(1.1)}}
+#s0 .inner{position:relative;z-index:2}
+.cover-meta{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;margin-top:54px;padding-top:28px;border-top:1px solid var(--line)}
+.cover-meta .blk{max-width:340px}
+.cover-tag{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.cover-tag b{color:var(--cream);font-weight:500}
+h1 .big{display:block}
+
+/* ===================== APPROACH ===================== */
+.principles{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);margin-top:48px}
+.principle{background:var(--bg);padding:34px 34px 38px;position:relative;transition:background .4s var(--ease)}
+.principle:hover{background:var(--bg-2)}
+.principle .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.1em}
+.principle h3{font-family:'Fraunces',serif;font-weight:400;font-size:24px;letter-spacing:-.01em;margin:16px 0 12px}
+.principle p{font-size:15px}
+
+/* ===================== PORTFOLIO INDEX ===================== */
+.index-grid{margin-top:46px;border-top:1px solid var(--line)}
+.idx-row{display:grid;grid-template-columns:58px 1.1fr 1.4fr 130px;gap:28px;align-items:center;
+  padding:26px 8px;border-bottom:1px solid var(--line);transition:padding-left .4s var(--ease),background .4s var(--ease);cursor:default}
+.idx-row:hover{padding-left:22px;background:linear-gradient(90deg,rgba(224,107,62,.06),transparent)}
+.idx-row .n{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:13px}
+.idx-row .nm{font-family:'Fraunces',serif;font-size:23px;font-weight:400}
+.idx-row .ds{font-size:14px;color:var(--muted)}
+.idx-row .sec{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-2);text-align:right}
+
+/* ===================== PROJECT LAYOUT ===================== */
+.proj{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-top:34px}
+.proj-head .kicker{color:var(--accent-2)}
+.proj-head .t-proj{margin:16px 0 18px}
+.proj-head .lead{max-width:440px}
+.caps{margin-top:30px;display:flex;flex-direction:column;gap:0}
+.cap{display:flex;gap:18px;padding:16px 0;border-top:1px solid var(--line)}
+.cap:last-child{border-bottom:1px solid var(--line)}
+.cap .ci{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent-2);padding-top:3px;min-width:24px}
+.cap .ct{font-size:15px;color:var(--cream-2)}
+.cap .ct b{color:var(--cream);font-weight:500}
+
+.stats{display:flex;gap:14px;margin-bottom:28px;flex-wrap:wrap}
+.stat{flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);padding:22px 22px 20px;border-radius:3px}
+.stat .v{font-family:'Fraunces',serif;font-size:clamp(30px,3vw,44px);font-weight:400;color:var(--cream);line-height:1;letter-spacing:-.01em}
+.stat .v .u{font-size:.42em;color:var(--accent);font-family:'JetBrains Mono',monospace;letter-spacing:0}
+.stat .l{margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.35}
+
+/* ===== E-COMMERCE PARALLEL — eye-catching ===== */
+.parallel{
+  position:relative;overflow:hidden;border-radius:9px;padding:30px 32px 32px;
+  background:
+    radial-gradient(130% 150% at 0% 0%, rgba(224,107,62,.26), transparent 56%),
+    linear-gradient(158deg, rgba(224,107,62,.12), rgba(33,29,22,.65));
+  border:1px solid rgba(224,107,62,.55);
+  box-shadow:0 22px 70px -30px rgba(224,107,62,.6), inset 0 0 0 1px rgba(224,107,62,.05);
+}
+.parallel::before{
+  content:"↗";position:absolute;right:14px;top:-6px;font-size:130px;line-height:1;
+  color:rgba(224,107,62,.12);font-family:'Hanken Grotesk',sans-serif;font-weight:700;pointer-events:none;
+}
+.ptag{
+  display:inline-flex;align-items:center;gap:11px;position:relative;
+  font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:20px;letter-spacing:-.01em;
+  color:var(--accent);margin-bottom:16px;
+}
+.ptag .arr{
+  display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;
+  background:var(--accent);color:#14120E;font-size:15px;font-weight:700;
+}
+.parallel p{color:#F4ECDC;font-size:15.5px;position:relative}
+.parallel p+p{margin-top:14px}
+.parallel p .hl{color:var(--accent-2);font-weight:500}
+
+/* flow chips */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:24px}
+.chip{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--cream-2);
+  background:var(--card);border:1px solid var(--line);padding:8px 13px;border-radius:30px;white-space:nowrap}
+.flow .ar{color:var(--accent);font-size:13px}
+
+/* ===================== USE CASE ===================== */
+.uc{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:30px;align-items:start}
+.uc-left .t{margin:16px 0 20px}
+.uc-unlock{font-size:clamp(17px,1.35vw,19px);line-height:1.55;color:var(--cream)}
+.uc-unlock .em{font-family:'Fraunces',serif;font-style:italic;color:var(--accent-2);font-size:1.08em}
+.uc-steps{counter-reset:st;margin-top:6px}
+.uc-step{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--line)}
+.uc-step:first-child{border-top:1px solid var(--line)}
+.uc-step .si{counter-increment:st;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);min-width:30px}
+.uc-step .si::before{content:"0" counter(st)}
+.uc-step .stx{font-size:15px;color:var(--cream-2)}
+.uc-step .stx b{color:var(--cream);font-family:'Fraunces',serif;font-weight:400;font-size:16px}
+.note{margin-top:26px;display:flex;gap:14px;align-items:flex-start;background:var(--card-2);border:1px solid var(--line);border-radius:3px;padding:20px 22px}
+.note .nk{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--sage);text-transform:uppercase;writing-mode:vertical-rl;transform:rotate(180deg)}
+.note p{font-size:14.5px}
+.note p b{color:var(--cream)}
+
+/* ===================== INTEGRATIONS ===================== */
+.int-grid{display:flex;flex-wrap:wrap;gap:12px;margin-top:40px;max-width:860px}
+.int{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.02em;color:var(--cream-2);
+  border:1px solid var(--line);padding:13px 20px;border-radius:40px;transition:all .35s var(--ease);background:var(--bg)}
+.int:hover{border-color:var(--accent);color:var(--cream);transform:translateY(-3px)}
+.int .d{color:var(--accent);margin-right:9px}
+
+/* ===================== CONTACT ===================== */
+#s10{justify-content:center}
+.contact-row{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:30px;margin-top:54px;padding-top:30px;border-top:1px solid var(--line)}
+.mail{font-family:'Fraunces',serif;font-size:clamp(24px,3vw,40px);font-weight:300;color:var(--cream);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:6px;transition:border-color .4s var(--ease),color .4s var(--ease)}
+.mail:hover{border-color:var(--accent);color:var(--accent)}
+.sign{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;text-align:right;line-height:1.9}
+.sign b{color:var(--cream-2)}
+
+.hint{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:80;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--muted-2);text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;transition:opacity .6s var(--ease)}
+.hint .k{border:1px solid var(--line);border-radius:4px;padding:2px 7px;color:var(--muted)}
+.hint.hide{opacity:0;pointer-events:none}
+
+/* ---------- responsive ---------- */
+@media(max-width:1024px){
+  .proj,.uc{grid-template-columns:1fr;gap:34px}
+  .nav{display:none}
+  section{padding:104px 40px 70px}
+}
+@media(max-width:720px){
+  section{padding:96px 24px 80px}
+  .topbar{padding:20px 22px}
+  .tag-right{display:none}
+  .principles{grid-template-columns:1fr}
+  .idx-row{grid-template-columns:40px 1fr;gap:14px}
+  .idx-row .ds,.idx-row .sec{display:none}
+  .stats{flex-direction:column}
+  .hint{display:none}
+  .int-grid{gap:9px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .r{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<header class="topbar">
+  <div class="brand"><span class="dot"></span><span>OVANIX&nbsp;<b>AI</b></span></div>
+  <div class="tag-right">Capabilities</div>
+</header>
+
+<nav class="nav" id="nav"></nav>
+
+<div class="hint" id="hint"><span class="k">↓</span> scroll &nbsp;·&nbsp; <span class="k">→</span> next slide</div>
+
+<main class="deck" id="deck">
+
+  <!-- 00 COVER -->
+  <section id="s0" data-label="Cover">
+    <div class="glow"></div>
+    <div class="inner">
+      <div class="kicker r">Capabilities &amp; Project Portfolio · 2026</div>
+      <h1 class="r" style="--d:1;margin-top:30px">
+        <span class="big">Systems that do</span>
+        <span class="big">the work. Built</span>
+        <span class="big"><span class="serif-i">around</span> your business.</span>
+      </h1>
+      <div class="cover-meta r" style="--d:2">
+        <div class="blk">
+          <p class="lead" style="color:var(--cream-2)">AI and automation, architected for the way your team actually operates, not bolted on as a chatbot.</p>
+        </div>
+        <div class="blk" style="text-align:right">
+          <div class="cover-tag">Prepared for<br><b>Danielle Schermerhorn</b></div>
+          <div class="cover-tag" style="margin-top:16px">By <b>Ovanix&nbsp;AI</b> · contact@ovanixai.com</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 APPROACH -->
+  <section id="s1" data-label="Approach">
+    <div class="inner">
+      <div class="kicker r">How we build</div>
+      <h2 class="t r" style="--d:1;margin-top:18px;max-width:900px">The value isn't asking AI a question. It's <span class="serif-i">architecting</span> the system around it.</h2>
+      <div class="principles r" style="--d:2">
+        <div class="principle">
+          <div class="num">P.01</div>
+          <h3>A human stays in the loop</h3>
+          <p>AI handles the volume and the plumbing. Judgment, voice, and the publish button stay with your people. Every output is built to be reviewed, not blindly trusted.</p>
+        </div>
+        <div class="principle">
+          <div class="num">P.02</div>
+          <h3>Purpose-built, not prompted</h3>
+          <p>Generic chatbots guess. We build structured pipelines around your own data and workflows, so the system knows your business, not the average of the internet.</p>
+        </div>
+        <div class="principle">
+          <div class="num">P.03</div>
+          <h3>We build on your stack</h3>
+          <p>No rip and replace. We layer on top of the tools you already pay for, like Shopify, Klaviyo, HubSpot and Salesforce, and connect what doesn't talk to each other.</p>
+        </div>
+        <div class="principle">
+          <div class="num">P.04</div>
+          <h3>Centralize the chaos</h3>
+          <p>Four tools for marketing, sales, ops and support, each with gaps between them. We pull them into one place, or build the custom layer that ties them together.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 PORTFOLIO -->
+  <section id="s2" data-label="Portfolio">
+    <div class="inner">
+      <div class="kicker r">Delivered work</div>
+      <h2 class="t r" style="--d:1;margin-top:18px">Four systems, four industries, one underlying capability.</h2>
+      <div class="index-grid r" style="--d:2">
+        <div class="idx-row"><span class="n">01</span><span class="nm">Customer Service AI</span><span class="ds">24/7 inbox that classifies, answers and escalates on its own.</span><span class="sec">Lawn Care · Vertdure</span></div>
+        <div class="idx-row"><span class="n">02</span><span class="nm">Sales Intelligence</span><span class="ds">13 locations of PDF reports into one live dashboard.</span><span class="sec">Hospitality · MKG</span></div>
+        <div class="idx-row"><span class="n">03</span><span class="nm">Quote &amp; Document Engine</span><span class="ds">Automated follow-up plus technical document assembly.</span><span class="sec">Construction · Écolo</span></div>
+        <div class="idx-row"><span class="n">04</span><span class="nm">Data at Scale</span><span class="ds">Thousands of physical records into a structured database.</span><span class="sec">National Sport · Boxing&nbsp;CA</span></div>
+      </div>
+      <p class="r" style="--d:3;margin-top:30px;max-width:680px;color:var(--muted)">Different sectors, same engine: turning messy, manual, fragmented work into something fast, structured and reliable, with a person in control.</p>
+    </div>
+  </section>
+
+  <!-- 03 PROJECT 1 -->
+  <section id="s3" data-label="Customer Service">
+    <div class="inner">
+      <div class="proj">
+        <div class="proj-head">
+          <div class="kicker r">Project · Vertdure</div>
+          <h2 class="t-proj r" style="--d:1">The inbox that <span class="k">runs itself.</span></h2>
+          <p class="lead r" style="--d:2">An AI customer-service layer that monitors the inbox 24/7, sorts every email into the right lane, answers from a private knowledge base, and pulls a human in only when it should.</p>
+          <div class="caps r" style="--d:3">
+            <div class="cap"><span class="ci">01</span><span class="ct"><b>Classifies on arrival</b> into urgent, billing, promotions or support, and routes accordingly.</span></div>
+            <div class="cap"><span class="ci">02</span><span class="ct"><b>Answers from your own playbook:</b> a proprietary knowledge base, not a generic model.</span></div>
+            <div class="cap"><span class="ci">03</span><span class="ct"><b>Escalates complex cases</b> to the right person while reassuring the customer instantly.</span></div>
+            <div class="cap"><span class="ci">04</span><span class="ct"><b>Reaches out proactively</b> with alerts, reminders, renewals and satisfaction surveys.</span></div>
+          </div>
+        </div>
+        <div class="proj-side">
+          <div class="stats r" style="--d:2">
+            <div class="stat"><div class="v">80<span class="u">%</span></div><div class="l">up to 80% of support workload handled automatically</div></div>
+            <div class="stat"><div class="v">&lt;1<span class="u">min</span></div><div class="l">acknowledgement, every time, day or night</div></div>
+          </div>
+          <div class="parallel r" style="--d:3">
+            <div class="ptag"><span class="arr">↗</span> In e-commerce</div>
+            <p>The same engine becomes a <span class="hl">24/7 storefront concierge</span>. It resolves "where is my order," sizing and product questions, and return requests instantly, while routing refunds, damaged-item claims and VIP complaints to a human with full context attached.</p>
+            <p>Layer on proactive shipping-delay alerts, back-in-stock pings and post-delivery check-ins, and you've replicated the in-person experience digitally. <span class="hl">Exactly the concierge shift you described shoppers craving.</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 PROJECT 2 -->
+  <section id="s4" data-label="Sales Intelligence">
+    <div class="inner">
+      <div class="proj">
+        <div class="proj-head">
+          <div class="kicker r">Project · MKG Gestion</div>
+          <h2 class="t-proj r" style="--d:1">Thirteen PDFs, <span class="k">one source of truth.</span></h2>
+          <p class="lead r" style="--d:2">An owner of 13 franchise locations opened up to 13 separate sales PDFs by email every morning, with no way to compare them. Now it reads, extracts and charts itself. Zero manual review.</p>
+          <div class="flow r" style="--d:3">
+            <span class="chip">Inbox</span><span class="ar">→</span>
+            <span class="chip">PDF download</span><span class="ar">→</span>
+            <span class="chip">AI extraction</span><span class="ar">→</span>
+            <span class="chip">Structured log</span><span class="ar">→</span>
+            <span class="chip">Live dashboard</span>
+          </div>
+          <div class="caps r" style="--d:4">
+            <div class="cap"><span class="ci">01</span><span class="ct"><b>Per-location, per-day trends</b> across the whole portfolio at a glance.</span></div>
+            <div class="cap"><span class="ci">02</span><span class="ct"><b>Anomaly alerts</b> when a location drops against the same day last week.</span></div>
+            <div class="cap"><span class="ci">03</span><span class="ct"><b>Automated digests:</b> weekly and monthly summaries delivered on their own.</span></div>
+          </div>
+        </div>
+        <div class="proj-side">
+          <div class="parallel r" style="--d:3">
+            <div class="ptag"><span class="arr">↗</span> In e-commerce</div>
+            <p>Swap 13 restaurant PDFs for <span class="hl">Shopify, Amazon, retail POS and ad platforms</span>. One pipeline pulls every channel into a single live dashboard (per-store, per-SKU, per-channel) and pings you the moment a hero product or sales channel slips.</p>
+            <p>This is "AI analyzing data" done the way it <span class="hl">actually works</span>: a structured extraction pipeline with verification, mapped to the exact fields. Never a chatbot guessing at a spreadsheet, and never pulling from a hidden column it shouldn't touch.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 PROJECT 3 -->
+  <section id="s5" data-label="Quote & Docs">
+    <div class="inner">
+      <div class="proj">
+        <div class="proj-head">
+          <div class="kicker r">Project · Écolopeintres</div>
+          <h2 class="t-proj r" style="--d:1">Follow-ups that <span class="k">never get forgotten.</span></h2>
+          <p class="lead r" style="--d:2">Two systems for a contractor: one that chases every quote until there's a decision, and one that assembles complex technical document packages from a single estimate PDF.</p>
+          <div class="caps r" style="--d:3">
+            <div class="cap"><span class="ci">01</span><span class="ct"><b>Auto follow-up every few days</b> after a quote is sent, until the prospect responds.</span></div>
+            <div class="cap"><span class="ci">02</span><span class="ct"><b>Reads each reply:</b> buying signals escalate to a human, and hard "no"s drop out quietly.</span></div>
+            <div class="cap"><span class="ci">03</span><span class="ct"><b>Document assembly:</b> parses estimates, matches products, pre-fills forms and merges to one PDF.</span></div>
+          </div>
+        </div>
+        <div class="proj-side">
+          <div class="parallel r" style="--d:3">
+            <div class="ptag"><span class="arr">↗</span> In e-commerce</div>
+            <p>The follow-up engine <span class="hl">is a retention sequence engine</span>. For DTC it's abandoned-cart and post-purchase flows that adapt to replies; for wholesale it's automated quote follow-up until a decision lands. AI reads each response and acts: escalate intent, suppress the "no"s, so nothing leaks out of the funnel. <span class="hl">The cadence is automated; the voice stays yours.</span></p>
+            <p>The document side maps to <span class="hl">bulk product onboarding</span>: ingest supplier spec sheets, match to your catalog taxonomy, and pre-fill PDP fields and marketplace feeds, all assembled for human sign-off.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 PROJECT 4 -->
+  <section id="s6" data-label="Data at Scale">
+    <div class="inner">
+      <div class="proj">
+        <div class="proj-head">
+          <div class="kicker r">Project · Boxing Canada</div>
+          <h2 class="t-proj r" style="--d:1">Decades of paper, <span class="k">made searchable.</span></h2>
+          <p class="lead r" style="--d:2">Staff photograph the pages of physical athlete books; the system extracts, validates, cleans and organizes everything into a national database, at tournament scale.</p>
+          <div class="caps r" style="--d:3">
+            <div class="cap"><span class="ci">01</span><span class="ct"><b>Photos into structured records</b> with no manual data entry.</span></div>
+            <div class="cap"><span class="ci">02</span><span class="ct"><b>One national database:</b> a single source of truth across provinces and clubs.</span></div>
+            <div class="cap"><span class="ci">03</span><span class="ct"><b>Tournament-scale throughput:</b> thousands of records processed without extra staff.</span></div>
+          </div>
+        </div>
+        <div class="proj-side">
+          <div class="stats r" style="--d:2">
+            <div class="stat"><div class="v">3,000+</div><div class="l">athlete books digitized within a year</div></div>
+            <div class="stat"><div class="v">0<span class="u">extra hires</span></div><div class="l">to handle peak tournament volume</div></div>
+          </div>
+          <div class="parallel r" style="--d:3">
+            <div class="ptag"><span class="arr">↗</span> In e-commerce</div>
+            <p>Strip away the sport and this is <span class="hl">industrial-grade extraction</span>: thousands of messy, unstructured documents into one clean database. For e-com that's migrating legacy catalogs, digitizing decades of supplier paperwork, or normalizing product data across acquired brands.</p>
+            <p>It's also the antidote to the "hidden columns" problem: <span class="hl">a disciplined pipeline knows exactly which field is which, so it never invents a metric.</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 USE CASE 1 -->
+  <section id="s7" data-label="Use Case · PDP">
+    <div class="inner">
+      <div class="uc">
+        <div class="uc-left">
+          <div class="kicker r">Advanced use case 01 · Merchandising + Returns</div>
+          <h2 class="t r" style="--d:1">The self-correcting product page.</h2>
+          <p class="uc-unlock r" style="--d:2">Most brands keep reviews, return reasons, support tickets and product photos in four separate piles nobody reads end to end. This system reads them <span class="em">together</span>, finds the root cause behind a SKU's returns and stalled conversion, and proposes the fix.</p>
+          <div class="note r" style="--d:3">
+            <div class="nk">Why it's<br>not slop</div>
+            <p>It's grounded entirely in <b>your own customer data</b>, not generated from nothing. And it connects returns, a cost center everyone ignores, directly to copy and conversion: a loop most agencies never close.</p>
+          </div>
+        </div>
+        <div class="uc-right">
+          <div class="uc-steps r" style="--d:2">
+            <div class="uc-step"><span class="si"></span><span class="stx"><b>Ingest the unstructured.</b> Reviews, return notes, chat transcripts and PDP images flow into one structured pipeline.</span></div>
+            <div class="uc-step"><span class="si"></span><span class="stx"><b>Cluster and root-cause.</b> AI finds the pattern: "runs small" surfacing across 38% of reviews and return reasons for one line.</span></div>
+            <div class="uc-step"><span class="si"></span><span class="stx"><b>Draft the correction.</b> Revised sizing guidance, PDP copy and a merchandising recommendation: generated, not guessed.</span></div>
+            <div class="uc-step"><span class="si"></span><span class="stx"><b>Human approves, then it ships.</b> Your team owns the voice and the publish button. Returns drop; conversion climbs.</span></div>
+          </div>
+          <div class="flow r" style="--d:3">
+            <span class="chip">Reviews</span><span class="chip">Returns</span><span class="chip">Support tickets</span><span class="chip">PDP images</span><span class="ar">→</span><span class="chip">Your CMS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 USE CASE 2 -->
+  <section id="s8" data-label="Use Case · Retention">
+    <div class="inner">
+      <div class="uc">
+        <div class="uc-left">
+          <div class="kicker r">Advanced use case 02 · Lifecycle + Retention</div>
+          <h2 class="t r" style="--d:1">The predictive retention concierge.</h2>
+          <p class="uc-unlock r" style="--d:2">Standard lifecycle marketing fires the <span class="em">same</span> flows at everyone on a fixed calendar. This models churn risk and predicted lifetime value at the <span class="em">individual</span> level, then decides who to reach, when, and with what offer.</p>
+          <div class="note r" style="--d:3">
+            <div class="nk">Respects<br>your rules</div>
+            <p>AI decides the <b>targeting, timing and economics</b>. Humans keep the words. No generic AI copy goes out under your brand. It turns retention from a calendar into a per-person decision engine.</p>
+          </div>
+        </div>
+        <div class="uc-right">
+          <div class="uc-steps r" style="--d:2">
+            <div class="uc-step"><span class="si"></span><span class="stx"><b>Unify the signals.</b> Order rhythm, category affinity, discount sensitivity, email and SMS engagement, review and support sentiment, all per customer.</span></div>
+            <div class="uc-step"><span class="si"></span><span class="stx"><b>Score risk and value.</b> Every customer gets a live churn-risk score and an LTV tier.</span></div>
+            <div class="uc-step"><span class="si"></span><span class="stx"><b>Choose the intervention.</b> A replenishment nudge, a margin-aware win-back, or a white-glove VIP touch, matched to the person.</span></div>
+            <div class="uc-step"><span class="si"></span><span class="stx"><b>Your team writes the message.</b> The concierge experience clients are craving, delivered at the scale of the whole list.</span></div>
+          </div>
+          <div class="flow r" style="--d:3">
+            <span class="chip">Shopify</span><span class="chip">Klaviyo / Attentive</span><span class="chip">Reviews</span><span class="chip">HubSpot / Salesforce</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 INTEGRATIONS -->
+  <section id="s9" data-label="Integrations">
+    <div class="inner">
+      <div class="kicker r">Built on your stack</div>
+      <h2 class="t r" style="--d:1;margin-top:18px;max-width:880px">We don't replace what works. We connect what <span class="serif-i">doesn't talk</span> to each other.</h2>
+      <p class="r" style="--d:2;margin-top:22px;max-width:620px;color:var(--muted)">A lot of your clients want integration with HubSpot or Salesforce. That's the easy part. These are some of the tools we build with and across, e-commerce or otherwise.</p>
+      <div class="int-grid r" style="--d:3">
+        <span class="int"><span class="d">·</span>Shopify</span>
+        <span class="int"><span class="d">·</span>HubSpot</span>
+        <span class="int"><span class="d">·</span>Salesforce</span>
+        <span class="int"><span class="d">·</span>Klaviyo</span>
+        <span class="int"><span class="d">·</span>Attentive</span>
+        <span class="int"><span class="d">·</span>Meta Ads API</span>
+        <span class="int"><span class="d">·</span>Google / GA4</span>
+        <span class="int"><span class="d">·</span>Gorgias / Zendesk</span>
+        <span class="int"><span class="d">·</span>n8n</span>
+        <span class="int"><span class="d">·</span>Google Sheets</span>
+        <span class="int"><span class="d">·</span>Looker Studio</span>
+        <span class="int"><span class="d">·</span>Notion</span>
+        <span class="int"><span class="d">·</span>Slack</span>
+        <span class="int"><span class="d">·</span>Gmail / Outlook</span>
+        <span class="int"><span class="d">·</span>Custom SaaS layer</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 CONTACT -->
+  <section id="s10" data-label="Contact">
+    <div class="inner">
+      <div class="kicker r">Let's build</div>
+      <h2 class="t r" style="--d:1;margin-top:18px;max-width:960px">If a client ever needs something they didn't think was <span class="serif-i">possible</span>, that's our part.</h2>
+      <p class="lead r" style="--d:2;margin-top:26px;max-width:560px;color:var(--cream-2)">Custom AI software, integrations, or a centralized layer over a messy stack. Across any industry, e-commerce or otherwise. Point them our way and we'll take it from there.</p>
+      <div class="contact-row r" style="--d:3">
+        <a class="mail" href="mailto:contact@ovanixai.com">contact@ovanixai.com</a>
+        <div class="sign">
+          <b>OVANIX AI</b><br>
+          AI Systems &amp; Automation<br>
+          Prepared for Danielle Schermerhorn
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  const deck=document.getElementById('deck');
+  const sections=[...document.querySelectorAll('section')];
+  const nav=document.getElementById('nav');
+  const progress=document.getElementById('progress');
+  const hint=document.getElementById('hint');
+
+  sections.forEach((s)=>{
+    const b=document.createElement('button');
+    b.innerHTML='<span class="txt">'+s.dataset.label+'</span><span class="bar"></span>';
+    b.addEventListener('click',()=>s.scrollIntoView({behavior:'smooth'}));
+    nav.appendChild(b);
+  });
+  const navBtns=[...nav.children];
+
+  function setActive(i){
+    navBtns.forEach((b,k)=>b.classList.toggle('active',k===i));
+  }
+
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        setActive(sections.indexOf(e.target));
+      }
+    });
+  },{root:deck,threshold:.55});
+  sections.forEach(s=>io.observe(s));
+
+  deck.addEventListener('scroll',()=>{
+    const max=deck.scrollHeight-deck.clientHeight;
+    progress.style.width=(deck.scrollTop/max*100)+'%';
+    if(deck.scrollTop>40)hint.classList.add('hide');else hint.classList.remove('hide');
+  });
+
+  function current(){
+    let best=0,bestDist=Infinity;
+    sections.forEach((s,i)=>{
+      const d=Math.abs(s.offsetTop-deck.scrollTop);
+      if(d<bestDist){bestDist=d;best=i;}
+    });
+    return best;
+  }
+  document.addEventListener('keydown',(e)=>{
+    const i=current();
+    if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){
+      e.preventDefault();
+      if(i<sections.length-1)sections[i+1].scrollIntoView({behavior:'smooth'});
+    }else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){
+      e.preventDefault();
+      if(i>0)sections[i-1].scrollIntoView({behavior:'smooth'});
+    }else if(e.key==='Home'){e.preventDefault();sections[0].scrollIntoView({behavior:'smooth'});}
+    else if(e.key==='End'){e.preventDefault();sections[sections.length-1].scrollIntoView({behavior:'smooth'});}
+  });
+
+  sections[0].classList.add('in');
+  setActive(0);
+})();
+</script>
+</body>
+</html>
